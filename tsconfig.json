@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "removeComments": true,
+    "watch": true,
+    "strict": true,
+    "esModuleInterop": true, // for imports and exports
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "exclude": ["./src/exclude"]
+}
