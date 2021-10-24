@@ -45,67 +45,68 @@ var puppeteer_extra_1 = __importDefault(require("puppeteer-extra"));
 var puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extra-plugin-stealth"));
 puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
 var searchSkyscanner = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var browser, page, content, $, e_1;
+    var url, browser, page, content, $, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 17, , 18]);
+                url = "https://www.skyscanner.net";
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 17, , 18]);
                 console.log("searching Skyscanner");
                 return [4, puppeteer_extra_1.default.launch({
-                        headless: false,
                         ignoreHTTPSErrors: true,
                     })];
-            case 1:
+            case 2:
                 browser = _a.sent();
                 return [4, browser.newPage()];
-            case 2:
-                page = _a.sent();
-                return [4, page.setViewport({ width: 1920, height: 1080 })];
             case 3:
-                _a.sent();
-                return [4, page.emulateTimezone("Asia/Singapore")];
-            case 4:
-                _a.sent();
+                page = _a.sent();
                 console.log("navigating to page");
-                return [4, page.goto("https://www.skyscanner.net", {
+                return [4, page.goto(url, {
                         waitUntil: "domcontentloaded",
                     })];
+            case 4:
+                _a.sent();
+                page.screenshot({ path: "skyscanner.png" });
+                return [4, page.waitForSelector("#fsc-origin-search")];
             case 5:
                 _a.sent();
-                return [4, page.waitForSelector("#fsc-origin-search")];
+                return [4, page.click("#fsc-origin-search")];
             case 6:
                 _a.sent();
-                return [4, page.click("#fsc-origin-search")];
+                return [4, page.keyboard.type("CNX")];
             case 7:
                 _a.sent();
-                return [4, page.keyboard.type("CNX")];
+                return [4, page.click("#fsc-destination-search")];
             case 8:
                 _a.sent();
-                return [4, page.click("#fsc-destination-search")];
+                return [4, page.keyboard.type("URT")];
             case 9:
                 _a.sent();
-                return [4, page.keyboard.type("URT")];
+                return [4, page.click("#depart-fsc-datepicker-button > span")];
             case 10:
                 _a.sent();
-                return [4, page.click("#depart-fsc-datepicker-button > span")];
+                return [4, page.keyboard.type("30/10/21")];
             case 11:
                 _a.sent();
-                return [4, page.keyboard.type("30/10/21")];
+                return [4, page.click("#return-fsc-datepicker-button > span")];
             case 12:
                 _a.sent();
-                return [4, page.click("#return-fsc-datepicker-button > span")];
+                return [4, page.keyboard.type("05/11/21")];
             case 13:
                 _a.sent();
-                return [4, page.keyboard.type("05/11/21")];
+                return [4, page.click("#flights-search-controls-root > div > div > form > div:nth-child(3) > button")];
             case 14:
                 _a.sent();
-                return [4, page.click("#flights-search-controls-root > div > div > form > div:nth-child(3) > button")];
+                return [4, page.waitForSelector("#app-root > div.FlightsDayView_row__NjQyZ > div > div > div > div:nth-child(1) > div.FlightsResults_dayViewItems__ZDFlO")];
             case 15:
                 _a.sent();
                 return [4, page.content()];
             case 16:
                 content = _a.sent();
                 $ = cheerio_1.default.load(content);
+                getPrices($);
                 console.log("done");
                 return [3, 18];
             case 17:
@@ -119,3 +120,13 @@ var searchSkyscanner = function () { return __awaiter(void 0, void 0, void 0, fu
 }); };
 exports.searchSkyscanner = searchSkyscanner;
 (0, exports.searchSkyscanner)();
+function getPrices($) {
+    var prices = [];
+    $("div.FlightsResults_dayViewItems__ZDFlO > div")
+        .find("div.BpkTicket_bpk-ticket__paper__N2IwN.BpkTicket_bpk-ticket__stub__MGVjZ.Ticket_stub__NGYxN.BpkTicket_bpk-ticket__stub--padded__MzZmN.BpkTicket_bpk-ticket__stub--horizontal__Y2IzN.BpkTicket_bpk-ticket__paper--with-notches__NDVkM > div > div > div")
+        .each(function (i, el) {
+        var p = $(el).find("span").text();
+        prices.push(p);
+    });
+    console.log(prices);
+}
