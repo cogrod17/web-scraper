@@ -52,7 +52,7 @@ function merge(
       },
     });
   }
-  // console.log(complete);
+  console.log(complete);
   return complete;
 }
 

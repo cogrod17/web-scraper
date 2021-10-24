@@ -78,6 +78,7 @@ function merge(prices, times, stops, airlines) {
             },
         });
     }
+    console.log(complete);
     return complete;
 }
 function getScheduleAndAirlines($, ways) {

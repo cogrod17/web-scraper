@@ -4,7 +4,8 @@
     "cheerio": "^1.0.0-rc.10",
     "express": "^4.17.1",
     "nodemon": "^2.0.13",
-    "puppeteer": "^10.4.0",
+    "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-stealth": "^2.9.0",
     "uuid": "^8.3.2"
   },
   "name": "stock-web-scraper",

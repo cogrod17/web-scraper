@@ -41,31 +41,79 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.searchSkyscanner = void 0;
 var cheerio_1 = __importDefault(require("cheerio"));
-var puppeteer_1 = __importDefault(require("puppeteer"));
+var puppeteer_extra_1 = __importDefault(require("puppeteer-extra"));
+var puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extra-plugin-stealth"));
+puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
 var searchSkyscanner = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var browser, page, content, $, form;
+    var browser, page, content, $, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                _a.trys.push([0, 17, , 18]);
                 console.log("searching Skyscanner");
-                return [4, puppeteer_1.default.launch({ headless: true })];
+                return [4, puppeteer_extra_1.default.launch({
+                        headless: false,
+                        ignoreHTTPSErrors: true,
+                    })];
             case 1:
                 browser = _a.sent();
                 return [4, browser.newPage()];
             case 2:
                 page = _a.sent();
+                return [4, page.setViewport({ width: 1920, height: 1080 })];
+            case 3:
+                _a.sent();
+                return [4, page.emulateTimezone("Asia/Singapore")];
+            case 4:
+                _a.sent();
+                console.log("navigating to page");
                 return [4, page.goto("https://www.skyscanner.net", {
                         waitUntil: "domcontentloaded",
                     })];
-            case 3:
+            case 5:
+                _a.sent();
+                return [4, page.waitForSelector("#fsc-origin-search")];
+            case 6:
+                _a.sent();
+                return [4, page.click("#fsc-origin-search")];
+            case 7:
+                _a.sent();
+                return [4, page.keyboard.type("CNX")];
+            case 8:
+                _a.sent();
+                return [4, page.click("#fsc-destination-search")];
+            case 9:
+                _a.sent();
+                return [4, page.keyboard.type("URT")];
+            case 10:
+                _a.sent();
+                return [4, page.click("#depart-fsc-datepicker-button > span")];
+            case 11:
+                _a.sent();
+                return [4, page.keyboard.type("30/10/21")];
+            case 12:
+                _a.sent();
+                return [4, page.click("#return-fsc-datepicker-button > span")];
+            case 13:
+                _a.sent();
+                return [4, page.keyboard.type("05/11/21")];
+            case 14:
+                _a.sent();
+                return [4, page.click("#flights-search-controls-root > div > div > form > div:nth-child(3) > button")];
+            case 15:
                 _a.sent();
                 return [4, page.content()];
-            case 4:
+            case 16:
                 content = _a.sent();
                 $ = cheerio_1.default.load(content);
-                form = $("#pagewrap").html();
-                console.log(form);
-                return [2];
+                console.log("done");
+                return [3, 18];
+            case 17:
+                e_1 = _a.sent();
+                console.log("there was an error");
+                console.log(e_1);
+                return [3, 18];
+            case 18: return [2];
         }
     });
 }); };
