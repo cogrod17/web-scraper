@@ -5,6 +5,7 @@
     "express": "^4.17.1",
     "nodemon": "^2.0.13",
     "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-adblocker": "^2.12.0",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
     "uuid": "^8.3.2"
   },

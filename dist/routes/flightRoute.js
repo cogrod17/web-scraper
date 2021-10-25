@@ -35,27 +35,59 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var searchKayak_js_1 = require("../scrapers/searchKayak.js");
+var momondo_js_1 = require("../scrapers/momondo.js");
 var router = express_1.default.Router();
 router.get("/flights", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var kayakArr, e_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var data, response, _a, kayak, momo, final, e_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4, (0, searchKayak_js_1.searchKayak)()];
+                _b.trys.push([0, 2, , 3]);
+                return [4, Promise.allSettled([(0, searchKayak_js_1.searchKayak)(), (0, momondo_js_1.searchMomo)()])];
             case 1:
-                kayakArr = _a.sent();
-                console.log(kayakArr);
-                res.status(200).send(kayakArr);
+                data = _b.sent();
+                response = data.filter(function (res) { return res.status === "fulfilled"; });
+                _a = __read(response, 2), kayak = _a[0], momo = _a[1];
+                final = [];
+                if (kayak.status === "fulfilled")
+                    final.push.apply(final, __spreadArray([], __read(kayak.value), false));
+                if (momo.status === "fulfilled")
+                    final.push.apply(final, __spreadArray([], __read(momo.value), false));
+                res.status(200).send(final);
                 return [3, 3];
             case 2:
-                e_1 = _a.sent();
+                e_1 = _b.sent();
                 res.status(500).send({ error: "Something went wrong" });
                 return [3, 3];
             case 3: return [2];

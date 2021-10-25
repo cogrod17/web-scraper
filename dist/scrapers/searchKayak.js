@@ -39,24 +39,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchKayak = void 0;
+exports.getStops = exports.getDuration = exports.getPrice = exports.getAirlines = exports.merge = exports.searchKayak = void 0;
 var cheerio_1 = __importDefault(require("cheerio"));
 var axios_1 = __importDefault(require("axios"));
 var searchKayak = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var w, res, $, airlines, prices, times, stops;
+    var w, res, $, airlines, prices, times, stops, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                w = "one";
-                return [4, axios_1.default.get("https://www.kayak.com/flights/CNX-URT/2021-11-18?sort=price_a")];
+                w = "two";
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4, axios_1.default.get("https://www.kayak.com/flights/DEN-NYC/2021-11-23/2021-11-30?sort=price_a")];
+            case 2:
                 res = _a.sent();
                 $ = cheerio_1.default.load(res.data);
-                airlines = getScheduleAndAirlines($, w);
+                airlines = getAirlines($, w);
                 prices = getPrice($);
                 times = getDuration($, w);
                 stops = getStops($, w);
                 return [2, merge(prices, times, stops, airlines)];
+            case 3:
+                e_1 = _a.sent();
+                return [2, "failed"];
+            case 4: return [2];
         }
     });
 }); };
@@ -78,10 +85,10 @@ function merge(prices, times, stops, airlines) {
             },
         });
     }
-    console.log(complete);
     return complete;
 }
-function getScheduleAndAirlines($, ways) {
+exports.merge = merge;
+function getAirlines($, ways) {
     var airlines = [];
     var lastAir;
     $(".section.times > .bottom").each(function (i, el) {
@@ -97,6 +104,7 @@ function getScheduleAndAirlines($, ways) {
     });
     return airlines;
 }
+exports.getAirlines = getAirlines;
 function getPrice($) {
     var prices = [];
     $("div[class=above-button]")
@@ -106,6 +114,7 @@ function getPrice($) {
     });
     return prices;
 }
+exports.getPrice = getPrice;
 function getDuration($, ways) {
     var times = [];
     var lastDur;
@@ -127,6 +136,7 @@ function getDuration($, ways) {
     });
     return times;
 }
+exports.getDuration = getDuration;
 function getStops($, ways) {
     var lastStop;
     var stops = [];
@@ -145,3 +155,4 @@ function getStops($, ways) {
     });
     return stops;
 }
+exports.getStops = getStops;

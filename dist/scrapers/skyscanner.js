@@ -43,13 +43,16 @@ exports.searchSkyscanner = void 0;
 var cheerio_1 = __importDefault(require("cheerio"));
 var puppeteer_extra_1 = __importDefault(require("puppeteer-extra"));
 var puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extra-plugin-stealth"));
+var puppeteer_extra_plugin_adblocker_1 = __importDefault(require("puppeteer-extra-plugin-adblocker"));
 puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_stealth_1.default)());
+puppeteer_extra_1.default.use((0, puppeteer_extra_plugin_adblocker_1.default)());
 var searchSkyscanner = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var url, browser, page, content, $, e_1;
+    var url, w, browser_1, page, content, $, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 url = "https://www.skyscanner.net";
+                w = "two";
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 17, , 18]);
@@ -58,8 +61,8 @@ var searchSkyscanner = function () { return __awaiter(void 0, void 0, void 0, fu
                         ignoreHTTPSErrors: true,
                     })];
             case 2:
-                browser = _a.sent();
-                return [4, browser.newPage()];
+                browser_1 = _a.sent();
+                return [4, browser_1.newPage()];
             case 3:
                 page = _a.sent();
                 console.log("navigating to page");
@@ -75,13 +78,13 @@ var searchSkyscanner = function () { return __awaiter(void 0, void 0, void 0, fu
                 return [4, page.click("#fsc-origin-search")];
             case 6:
                 _a.sent();
-                return [4, page.keyboard.type("CNX")];
+                return [4, page.keyboard.type("Denver")];
             case 7:
                 _a.sent();
                 return [4, page.click("#fsc-destination-search")];
             case 8:
                 _a.sent();
-                return [4, page.keyboard.type("URT")];
+                return [4, page.keyboard.type("Los Angeles")];
             case 9:
                 _a.sent();
                 return [4, page.click("#depart-fsc-datepicker-button > span")];
@@ -102,24 +105,50 @@ var searchSkyscanner = function () { return __awaiter(void 0, void 0, void 0, fu
                 return [4, page.waitForSelector("#app-root > div.FlightsDayView_row__NjQyZ > div > div > div > div:nth-child(1) > div.FlightsResults_dayViewItems__ZDFlO")];
             case 15:
                 _a.sent();
+                page.screenshot({ path: "skyscanner.png" });
                 return [4, page.content()];
             case 16:
                 content = _a.sent();
                 $ = cheerio_1.default.load(content);
-                getPrices($);
                 console.log("done");
                 return [3, 18];
             case 17:
                 e_1 = _a.sent();
-                console.log("there was an error");
-                console.log(e_1);
-                return [3, 18];
+                return [2, "failed"];
             case 18: return [2];
         }
     });
 }); };
 exports.searchSkyscanner = searchSkyscanner;
-(0, exports.searchSkyscanner)();
+function getAirlines($) {
+    var airlines = [];
+    $(".FlightsTicket_container__NWJkY")
+        .find(".LegDetails_container__MTkyZ")
+        .each(function (i, el) {
+        var cur = $(el).text();
+        airlines.push(cur);
+    });
+    console.log(airlines);
+}
+function getDurations($, ways) {
+    var duration = [];
+    var lastDur;
+    $(".FlightsTicket_container__NWJkY")
+        .find("div.LegInfo_stopsContainer__NWIyN > span")
+        .each(function (i, el) {
+        var cur = $(el).text();
+        if (ways === "one")
+            duration.push(cur);
+        else {
+            if ((i + 1) % 2 === 0)
+                duration.push([lastDur, cur]);
+            else
+                lastDur = cur;
+        }
+    });
+    console.log(duration);
+    return duration;
+}
 function getPrices($) {
     var prices = [];
     $("div.FlightsResults_dayViewItems__ZDFlO > div")
@@ -128,5 +157,5 @@ function getPrices($) {
         var p = $(el).find("span").text();
         prices.push(p);
     });
-    console.log(prices);
+    return prices;
 }

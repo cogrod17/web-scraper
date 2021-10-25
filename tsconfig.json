@@ -7,7 +7,8 @@
     "strict": true,
     "esModuleInterop": true, // for imports and exports
     "rootDir": "./src",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "downlevelIteration": true
   },
   "exclude": ["./src/exclude"]
 }

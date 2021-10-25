@@ -3,7 +3,7 @@ const app = express();
 
 import flightRoute from "./routes/flightRoute.js";
 
-import "./scrapers/skyscanner.js";
+import "./scrapers/yahooFin.js";
 
 const port = process.env.PORT || 3001;
 

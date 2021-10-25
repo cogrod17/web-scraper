@@ -16,20 +16,23 @@ interface CompleteTrip {
 }
 
 export const searchKayak = async () => {
-  let w = "one";
-
-  let res = await axios.get(
-    "https://www.kayak.com/flights/CNX-URT/2021-11-18?sort=price_a"
-  );
-  let $ = cheerio.load(res.data);
-  let airlines: [string, string?][] = getScheduleAndAirlines($, w);
-  let prices: Array<string> = getPrice($);
-  let times: RoundTrip[] = getDuration($, w);
-  let stops: StopPair[] = getStops($, w);
-  return merge(prices, times, stops, airlines);
+  let w = "two";
+  try {
+    let res = await axios.get(
+      "https://www.kayak.com/flights/DEN-NYC/2021-11-23/2021-11-30?sort=price_a"
+    );
+    let $ = cheerio.load(res.data);
+    let airlines: [string, string?][] = getAirlines($, w);
+    let prices: Array<string> = getPrice($);
+    let times: RoundTrip[] = getDuration($, w);
+    let stops: StopPair[] = getStops($, w);
+    return merge(prices, times, stops, airlines);
+  } catch (e) {
+    return "failed";
+  }
 };
 
-function merge(
+export function merge(
   prices: string[],
   times: RoundTrip[],
   stops: StopPair[],
@@ -52,14 +55,11 @@ function merge(
       },
     });
   }
-  console.log(complete);
+  // console.log(complete);
   return complete;
 }
 
-function getScheduleAndAirlines(
-  $: Function,
-  ways: string
-): [string, string?][] {
+export function getAirlines($: Function, ways: string): [string, string?][] {
   let airlines: [string, string?][] = [];
   let lastAir: string;
   $(".section.times > .bottom").each((i: number, el: HTMLElement) => {
@@ -73,7 +73,7 @@ function getScheduleAndAirlines(
   return airlines;
 }
 
-function getPrice<T extends Function>($: T): string[] {
+export function getPrice<T extends Function>($: T): string[] {
   let prices: string[] = [];
   $("div[class=above-button]")
     .find(".price-text")
@@ -83,7 +83,10 @@ function getPrice<T extends Function>($: T): string[] {
   return prices;
 }
 
-function getDuration<T extends Function>($: T, ways: string): RoundTrip[] {
+export function getDuration<T extends Function>(
+  $: T,
+  ways: string
+): RoundTrip[] {
   let times: RoundTrip[] = [];
   let lastDur: string;
   $("ol[class=flights]")
@@ -104,7 +107,7 @@ function getDuration<T extends Function>($: T, ways: string): RoundTrip[] {
   return times;
 }
 
-function getStops($: Function, ways: string): StopPair[] {
+export function getStops($: Function, ways: string): StopPair[] {
   let lastStop: string;
   let stops: [string, string?][] = [];
   $(".flights")
