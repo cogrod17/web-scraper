@@ -99,7 +99,7 @@ function getHistory($: Function): History {
       keys.push(text);
     });
 
-  let x = $(HISTORY_TABLE_SELECTOR)
+  $(HISTORY_TABLE_SELECTOR)
     .children("tbody")
     .find("tr")
     .each((i: number, el: HTMLElement) => {
@@ -109,16 +109,11 @@ function getHistory($: Function): History {
         .each((i: number, el: HTMLElement) => {
           let cur: string | number;
           cur = i === 0 || i === 6 ? $(el).text() : +$(el).text();
-
           dayData[keys[i]] = cur;
           if (i === 6) history.push(dayData);
         });
     });
-
-  // console.log(history);
   return history;
-  // console.log(x);
-  // console.log(keys);
 }
 
 /////////////////////////////////
@@ -153,7 +148,6 @@ function getSummary($: Function) {
         .find("td")
         .each((i: number, el: HTMLElement) => {
           let cur = $(el).text();
-
           if (i === 0) firstTd = cur;
           else data[firstTd] = cur;
         });
@@ -167,7 +161,6 @@ function getSummary($: Function) {
         .find("td")
         .each((i: number, el: HTMLElement) => {
           let cur = $(el).text();
-
           if (i === 0) firstTd = cur;
           else data[firstTd] = cur;
         });
@@ -191,7 +184,6 @@ function getQuote($: Function) {
   quote.price = temp[0];
   quote.dollarChange = dollar_change;
   quote.percentChange = percent_change;
-
   return quote;
 }
 
@@ -206,7 +198,6 @@ async function getToBottom(page: any) {
     await scrollDown(page);
     await page.waitForTimeout(delay);
     postCount = await getCount(page);
-    // console.log(`${preCount} < ${postCount}`);
   } while (preCount < postCount);
   await page.waitForTimeout(delay);
 }
