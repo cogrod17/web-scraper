@@ -4,7 +4,7 @@ const app = express();
 import flightRoute from "./routes/flightRoute.js";
 import stockRoute from "./routes/stockRoute.js";
 
-import "./scrapers/yahooFin.js";
+import "./scrapers/SPAnalyser.js";
 
 const port = process.env.PORT || 3001;
 
