@@ -19,52 +19,20 @@ interface Symbol {
 }
 [];
 
-// evaluate("IBM");
-// let arr = [
-//   "JPM",
-//   "IBM",
-//   "TSLA",
-//   "AAPL",
-//   "PYPL",
-//   "RIOT",
-//   "ABBV",
-//   "T",
-//   "BAC",
-//   "TSLA",
-//   "SBUX",
-//   "SHOP",
-// ];
-
-// for (let i = 0; i < arr.length; i++) {
-//   evaluate(arr[i]);
-// }
-
-// let obj1 = {
-//   name: "cole",
-// };
-
-// let obj2 = {
-//   age: 24,
-// };
-
-// Object.assign(obj1, obj2);
-// console.log(obj1);
-
-evaluateSP();
+// evaluateSP();
+// evaluate("LMT");
 
 export async function evaluateSP() {
   let list = await getSPCompanies();
-  let final: object[];
 
   for (let i = 0; i < list.length; i++) {
-    let obj = await evaluate(list[i].symbol);
-    Object.assign(list[i], obj);
-    console.log(`${i + 1}/${list.length} symbols finished`);
+    let obj = evaluate(list[i].symbol, list, i);
   }
-  console.log(list);
 }
 
-export async function evaluate(symbol: string) {
+let count = 0;
+
+export async function evaluate(symbol: string, list?: Symbol[], i?: number) {
   try {
     const { data } = await axios.get(
       `https://finance.yahoo.com/quote/${symbol}/key-statistics`
@@ -91,9 +59,16 @@ export async function evaluate(symbol: string) {
     ).text();
     if (PERatio !== "N/A") PERatio = +PERatio;
 
+    count++;
+    console.log(`${count}/${list.length} symbols finished`);
+    if (count === list.length) console.log(list);
     // console.log({ divYield, PBRatio, PEG, PERatio });
-    return { divYield, PBRatio, PEG, PERatio };
+    if (list && i) Object.assign(list[i], { divYield, PBRatio, PEG, PERatio });
+    else return { divYield, PBRatio, PEG, PERatio };
   } catch (e) {
+    count++;
+    console.log(`${count}/${list.length} symbols finished`);
+    if (count === list.length) console.log(list);
     return { error: "there was an error" };
   }
 }
@@ -101,7 +76,6 @@ export async function evaluate(symbol: string) {
 export async function getSPCompanies() {
   const { data } = await axios.get("https://www.slickcharts.com/sp500");
   const $ = cheerio.load(data);
-  //   console.log($("thead").text());
   let list: Symbol[] = [];
 
   $("tbody")
