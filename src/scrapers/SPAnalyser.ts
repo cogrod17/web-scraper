@@ -20,7 +20,7 @@ interface Symbol {
 [];
 
 // evaluateSP();
-// evaluate("LMT");
+evaluate("JPM");
 
 export async function evaluateSP() {
   let list = await getSPCompanies();
@@ -31,7 +31,6 @@ export async function evaluateSP() {
 }
 
 let count = 0;
-
 export async function evaluate(symbol: string, list?: Symbol[], i?: number) {
   try {
     const { data } = await axios.get(
@@ -60,15 +59,15 @@ export async function evaluate(symbol: string, list?: Symbol[], i?: number) {
     if (PERatio !== "N/A") PERatio = +PERatio;
 
     count++;
-    console.log(`${count}/${list.length} symbols finished`);
-    if (count === list.length) console.log(list);
+    console.log(`${symbol}: ${divYield} ${PBRatio} ${PEG}, ${PERatio}`);
+    if (list && count === list.length) console.log(list);
     // console.log({ divYield, PBRatio, PEG, PERatio });
     if (list && i) Object.assign(list[i], { divYield, PBRatio, PEG, PERatio });
     else return { divYield, PBRatio, PEG, PERatio };
   } catch (e) {
     count++;
-    console.log(`${count}/${list.length} symbols finished`);
-    if (count === list.length) console.log(list);
+    // console.log(`${count}/${list.length} symbols finished`);
+    if (list && count === list.length) console.log(list);
     return { error: "there was an error" };
   }
 }
