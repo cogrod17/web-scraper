@@ -20,15 +20,15 @@ interface Symbol {
 [];
 
 // evaluateSP();
-evaluate("JPM");
+// evaluate("JPM");
 
-export async function evaluateSP() {
-  let list = await getSPCompanies();
+// export async function evaluateSP() {
+//   let list = await getSPCompanies();
 
-  for (let i = 0; i < list.length; i++) {
-    let obj = evaluate(list[i].symbol, list, i);
-  }
-}
+//   for (let i = 0; i < list.length; i++) {
+//     let obj = evaluate(list[i].symbol, list, i);
+//   }
+// }
 
 let count = 0;
 export async function evaluate(symbol: string, list?: Symbol[], i?: number) {
