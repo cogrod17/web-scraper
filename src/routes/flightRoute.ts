@@ -4,11 +4,6 @@ import { searchMomo } from "../scrapers/momondo.js";
 
 const router = express.Router();
 
-interface ReturnPromise {
-  status: string;
-  value: string | object[];
-}
-
 router.get("/flights", async (req, res) => {
   try {
     const data = await Promise.allSettled([searchKayak(), searchMomo()]);
