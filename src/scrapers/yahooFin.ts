@@ -38,6 +38,7 @@ export const searchYahoo = async (symbol: string) => {
   const history = await getHistory(page);
   const incomeStatement = await getIncomeStatement(page);
   ////////////////////////////////////
+  console.log("DONE");
 
   return { quote, summary, stats, history, incomeStatement };
 };
@@ -61,10 +62,8 @@ type History = Day[];
 /////////////////////////////////
 
 async function getIncomeStatement(page: any) {
-  console.log("getting income statement");
   await page.click(FIN_TAB_SELECTOR);
   await page.waitForTimeout(3000);
-  page.screenshot({ path: "yahoo.png" });
   const content = await page.content();
   const $ = cheerio.load(content);
 
@@ -97,6 +96,7 @@ async function getHistory(page: any) {
   try {
     await page.click(HISTORY_SELECTOR);
     await page.waitForNavigation();
+    page.screenshot({ path: "yahoo.png" });
     await getToBottom(page);
     const content = await page.content();
     const $ = cheerio.load(content);
@@ -130,6 +130,7 @@ async function getHistory(page: any) {
 
     return history;
   } catch (e) {
+    console.log(e);
     return { error: "there was an error" };
   }
 }
@@ -207,10 +208,13 @@ function getQuote($: Function) {
       if (i <= 1) temp.push($(el).text());
     });
 
-  const [dollar_change, percent_change] = temp[1].split(" ");
-  quote.price = +temp[0].split(",").join("");
+  console.log(temp);
+  // const [dollar_change, percent_change] = temp[1].split(" ");
+  const [dollar_change, percent_change] = temp;
+  // quote.price = +temp[0].split(",").join("");
   quote.dollarChange = +dollar_change;
   quote.percentChange = +percent_change.slice(1, percent_change.length - 2);
+
   return quote;
 }
 

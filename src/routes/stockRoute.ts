@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/stock/:symbol", async (req, res) => {
   const { symbol } = req.params;
   try {
-    const info = await searchYahoo(req.params.symbol);
+    const info = await searchYahoo(symbol);
 
     res.status(200).send(info);
   } catch (e) {
