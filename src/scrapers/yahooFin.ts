@@ -10,10 +10,10 @@ const RIGHT_TABLE_SELECTOR =
   "#quote-summary > div:nth-child(2) > table > tbody";
 const STATISTICS_TAB_SELECTOR = "#quote-nav > ul > li:nth-child(4) > a";
 const STATS_CONTAIN_SELECTOR = "#Col1-0-KeyStatistics-Proxy";
-const HISTORY_SELECTOR = "#quote-nav > ul > li:nth-child(5) > a";
+const HISTORY_SELECTOR = "#quote-nav > ul > li:nth-child(6) > a";
 const HISTORY_TABLE_SELECTOR =
   "#Col1-1-HistoricalDataTable-Proxy > section > div:nth-child(2) > table";
-const FIN_TAB_SELECTOR = "#quote-nav > ul > li:nth-child(7) > a";
+const FIN_TAB_SELECTOR = "#quote-nav > ul > li:nth-child(8) > a";
 const INCOME_STATEMENT_TABLE =
   "#Col1-1-Financials-Proxy > section > div:nth-child(3) > div > div > div:nth-child(2)";
 
@@ -38,8 +38,8 @@ export const searchYahoo = async (symbol: string) => {
   const history = await getHistory(page);
   const incomeStatement = await getIncomeStatement(page);
   ////////////////////////////////////
-  console.log("DONE");
 
+  // return history;
   return { quote, summary, stats, history, incomeStatement };
 };
 
@@ -93,10 +93,12 @@ async function getIncomeStatement(page: any) {
 /////////////////////////////////
 
 async function getHistory(page: any) {
+  console.log("GETTING HISTORY");
   try {
     await page.click(HISTORY_SELECTOR);
-    await page.waitForNavigation();
-    page.screenshot({ path: "yahoo.png" });
+    // await page.waitForNavigation();
+    page.screenshot({ path: "history.png" });
+    await page.waitForSelector(HISTORY_TABLE_SELECTOR);
     await getToBottom(page);
     const content = await page.content();
     const $ = cheerio.load(content);

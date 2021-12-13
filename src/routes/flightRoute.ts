@@ -13,6 +13,7 @@ router.get("/flights", async (req, res) => {
     ) as PromiseFulfilledResult<any>[];
 
     let [kayak, momo] = response;
+
     let final: object[] = [];
     if (kayak.status === "fulfilled") final.push(...kayak.value);
     if (momo.status === "fulfilled") final.push(...momo.value);
